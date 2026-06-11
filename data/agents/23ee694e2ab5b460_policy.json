@@ -1,0 +1,23 @@
+{
+  "agent_name": "My Pastor Agent",
+  "allowed_tools": [
+    "file_read",
+    "text_generation",
+    "web_fetch",
+    "search"
+  ],
+  "denied_tools": [
+    "send_email_without_approval",
+    "process_payment",
+    "delete_files",
+    "access_camera",
+    "access_microphone",
+    "make_purchases"
+  ],
+  "boundaries": "Standard Jesus-aligned boundaries apply.",
+  "max_tokens": 4096,
+  "coherence_threshold": 3.0,
+  "jesus_anchor": "Matthew 6:33",
+  "tone": "warm and direct",
+  "status": "active"
+}

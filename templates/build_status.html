@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+{% block title %}Audit Results — {{ agent_name }}{% endblock %}
+{% block content %}
+<section class="section">
+    <h1>Audit Results: {{ agent_name }}</h1>
+
+    {% if five_result.verdict == 'good_fruit' %}
+    <div class="verdict verdict-good">
+        <h2>✅ Good Fruit Agent</h2>
+    {% elif five_result.verdict == 'approved' %}
+    <div class="verdict verdict-approved">
+        <h2>✅ Approved</h2>
+    {% elif five_result.verdict == 'rejected' %}
+    <div class="verdict verdict-rejected">
+        <h2>❌ Rejected</h2>
+    {% else %}
+    <div class="verdict verdict-correction">
+        <h2>⚠️ Needs Correction</h2>
+    {% endif %}
+        <p>Composite Score: <strong>{{ five_result.composite }}/5</strong></p>
+        {% if poa_grade %}
+        <p>PoA Grade: <strong>{{ poa_grade }}</strong></p>
+        {% endif %}
+    </div>
+
+    <div class="scores-grid">
+        <div class="score-card">
+            <h3>Truth</h3>
+            <div class="score-value">{{ five_result.truth_score }}/5</div>
+            <div class="score-bar"><div class="score-fill" style="width: {{ (five_result.truth_score / 5 * 100) }}%"></div></div>
+            <p class="scripture">"You shall know the truth, and the truth shall make you free." — John 8:32</p>
+        </div>
+        <div class="score-card">
+            <h3>Neighbor</h3>
+            <div class="score-value">{{ five_result.neighbor_score }}/5</div>
+            <div class="score-bar"><div class="score-fill" style="width: {{ (five_result.neighbor_score / 5 * 100) }}%"></div></div>
+            <p class="scripture">"You shall love your neighbor as yourself." — Matthew 22:39</p>
+        </div>
+        <div class="score-card">
+            <h3>Fruit</h3>
+            <div class="score-value">{{ five_result.fruit_score }}/5</div>
+            <div class="score-bar"><div class="score-fill" style="width: {{ (five_result.fruit_score / 5 * 100) }}%"></div></div>
+            <p class="scripture">"A tree is known by its fruit." — Matthew 12:33</p>
+        </div>
+        <div class="score-card">
+            <h3>Mammon</h3>
+            <div class="score-value">{{ five_result.mammon_score }}/5</div>
+            <div class="score-bar"><div class="score-fill" style="width: {{ (five_result.mammon_score / 5 * 100) }}%"></div></div>
+            <p class="scripture">"You cannot serve God and mammon." — Matthew 6:24</p>
+        </div>
+        <div class="score-card">
+            <h3>Service</h3>
+            <div class="score-value">{{ five_result.service_score }}/5</div>
+            <div class="score-bar"><div class="score-fill" style="width: {{ (five_result.service_score / 5 * 100) }}%"></div></div>
+            <p class="scripture">"The greatest among you shall be your servant." — Matthew 20:26</p>
+        </div>
+    </div>
+
+    {% if five_result.correction_notes %}
+    <div class="correction-notes">
+        <h2>Correction Notes</h2>
+        {% for test_name, notes in five_result.correction_notes.items() %}
+        <div class="note-block">
+            <h4>{{ test_name }}</h4>
+            <p>{{ notes }}</p>
+        </div>
+        {% endfor %}
+        <p class="note-help">Fix the issues above and <a href="/build">resubmit</a>. Unlimited free resubmits.</p>
+    </div>
+    {% endif %}
+
+    {% if five_result.verdict == 'approved' or five_result.verdict == 'good_fruit' %}
+    <div class="next-steps">
+        <h2>Your Agent is Ready</h2>
+
+        {% if agent_file %}
+        <div class="download-section">
+            <h3>📥 Download Your Agent</h3>
+            <div class="download-buttons">
+                <a href="/download/agent/{{ req_id }}" class="btn btn-primary">Download Agent (.md)</a>
+                <a href="/download/policy/{{ req_id }}" class="btn">Download Policy (.json)</a>
+            </div>
+            <p class="download-note">The .md file is your complete agent prompt. Paste it into any LLM to start using it.</p>
+        </div>
+        {% endif %}
+
+        <div class="upgrade-section">
+            <h3>Want Us to Build It For You?</h3>
+            <p>Get a polished, production-ready version with landing page, examples, and deployment support.</p>
+            <div class="offer-cards">
+                <div class="offer-card">
+                    <h4>Starter Build</h4>
+                    <p class="price">$99</p>
+                    <p>Custom agent prompt + policy + examples + receipt</p>
+                </div>
+                <div class="offer-card featured">
+                    <h4>Pro Build</h4>
+                    <p class="price">$299</p>
+                    <p>Starter + landing page + lead form + 90-day monitoring</p>
+                </div>
+                <div class="offer-card">
+                    <h4>Full System</h4>
+                    <p class="price">$499</p>
+                    <p>Pro + web app spec + DB schema + admin dashboard</p>
+                </div>
+            </div>
+            <p class="gumroad-note">Pay with Gumroad, PayPal, or crypto. One-time. No subscriptions.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if poa_receipt_id %}
+    <div class="receipt-info">
+        <p>PoA Receipt: <code>{{ poa_receipt_id }}</code> — <a href="/receipts/{{ poa_receipt_id }}">View on chain</a></p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

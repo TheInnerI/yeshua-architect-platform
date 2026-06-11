@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Yeshua Architect Platform{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/htmx.min.js"></script>
+</head>
+<body>
+    <nav class="nav">
+        <a href="/" class="nav-brand">
+            <img src="/static/img/logo.svg" alt="" class="nav-logo" role="presentation">
+            <span class="nav-brand-text">Yeshua Architect</span>
+        </a>
+        <div class="nav-links">
+            <a href="/how-it-works">How It Works</a>
+            <a href="/five-tests">Five Tests</a>
+            <a href="/examples">Examples</a>
+            <a href="/pricing">Offers</a>
+            <a href="/build" class="btn btn-primary">Build My Agent</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <img src="/static/img/logo.svg" alt="Yeshua Architect" class="footer-logo">
+            <p class="footer-tagline">Build AI agents that serve truth.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/how-it-works">How It Works</a>
+            <a href="/five-tests">Five Tests</a>
+            <a href="/examples">Examples</a>
+            <a href="/pricing">Offers</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/health">System Status</a>
+        </div>
+        <p class="footer-bottom">Free to explore. Real offers for real work. Gumroad payments only.</p>
+    </footer>
+</body>
+</html>

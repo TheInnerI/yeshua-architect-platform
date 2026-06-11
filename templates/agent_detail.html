@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block title %}Agent Detail — {{ agent['agent_name'] }}{% endblock %}
+{% block content %}
+<section class="section">
+    <h1>{{ agent['agent_name'] }}</h1>
+    <p class="purpose">{{ agent['purpose'] }}</p>
+
+    {% if agent['audience'] %}<p><strong>Serves:</strong> {{ agent['audience'] }}</p>{% endif %}
+    {% if agent['jesus_anchor'] %}<p><strong>Jesus Anchor:</strong> {{ agent['jesus_anchor'] }}</p>{% endif %}
+    {% if agent['boundaries'] %}<p><strong>Boundaries:</strong> {{ agent['boundaries'] }}</p>{% endif %}
+
+    {% if audit %}
+    <h2>Audit Results</h2>
+
+    {% if audit['verdict'] == 'good_fruit' %}
+    <div class="verdict verdict-good">
+        <h3>✅ Good Fruit Agent</h3>
+    {% elif audit['verdict'] == 'approved' %}
+    <div class="verdict verdict-approved">
+        <h3>✅ Approved</h3>
+    {% elif audit['verdict'] == 'rejected' %}
+    <div class="verdict verdict-rejected">
+        <h3>❌ Rejected</h3>
+    {% else %}
+    <div class="verdict verdict-correction">
+        <h3>⚠️ Needs Correction</h3>
+    {% endif %}
+        <p>Composite: <strong>{{ audit['composite_five'] }}/5</strong> · Grade: <strong>{{ audit['grade'] or 'N/A' }}</strong></p>
+    </div>
+
+    <div class="scores-grid">
+        <div class="score-card"><h4>Truth</h4><div class="score-value">{{ audit['truth_score'] }}/5</div></div>
+        <div class="score-card"><h4>Neighbor</h4><div class="score-value">{{ audit['neighbor_score'] }}/5</div></div>
+        <div class="score-card"><h4>Fruit</h4><div class="score-value">{{ audit['fruit_score'] }}/5</div></div>
+        <div class="score-card"><h4>Mammon</h4><div class="score-value">{{ audit['mammon_score'] }}/5</div></div>
+        <div class="score-card"><h4>Service</h4><div class="score-value">{{ audit['service_score'] }}/5</div></div>
+    </div>
+
+    {% if correction_notes %}
+    <div class="correction-notes">
+        <h3>Correction Notes</h3>
+        {% for test_name, notes in correction_notes.items() %}
+        <div class="note-block">
+            <h4>{{ test_name }}</h4>
+            <p>{{ notes }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if audit['poa_receipt_id'] %}
+    <p>PoA Receipt: <a href="/receipts/{{ audit['poa_receipt_id'] }}">{{ audit['poa_receipt_id'] }}</a></p>
+    {% endif %}
+    {% endif %}
+</section>
+{% endblock %}

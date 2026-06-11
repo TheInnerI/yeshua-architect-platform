@@ -1,0 +1,10 @@
+# Caddyfile — Yeshua Architect Platform
+# Place in /etc/caddy/Caddyfile or ~/Caddyfile
+
+architect.innerinetcompany.com {
+    reverse_proxy localhost:8080
+    encode gzip
+    log {
+        output file /var/log/caddy/yeshua-architect.log
+    }
+}

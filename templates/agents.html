@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}Delivered Agents — Yeshua Architect{% endblock %}
+{% block content %}
+<section class="section">
+    <h1>Delivered Agents</h1>
+    <p>Agents that have been built and delivered through the platform.</p>
+
+    {% if agents %}
+    <table class="agents-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Purpose</th>
+                <th>Verdict</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agent in agents %}
+            <tr>
+                <td><a href="/agents/{{ agent['id'] }}">{{ agent['agent_name'] }}</a></td>
+                <td>{{ agent['purpose'][:80] }}{% if agent['purpose']|length > 80 %}...{% endif %}</td>
+                <td>{{ agent['status'] }}</td>
+                <td>{{ agent['created_at'][:10] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty">No agents delivered yet. <a href="/build">Be the first</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

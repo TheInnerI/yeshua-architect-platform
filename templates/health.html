@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}System Health — Yeshua Architect{% endblock %}
+{% block content %}
+<section class="section">
+    <h1>System Health</h1>
+
+    <table class="health-table">
+        <tr>
+            <td>Platform</td>
+            <td><span class="status-dot ok"></span> Running</td>
+        </tr>
+        <tr>
+            <td>PoA Engine (:8000)</td>
+            <td><span class="status-dot {% if poa_status == 'connected' %}ok{% else %}fail{% endif %}"></span> {{ poa_status }}</td>
+        </tr>
+        <tr>
+            <td>MIO Observer (:8787)</td>
+            <td><span class="status-dot {% if mio_status == 'connected' %}ok{% else %}fail{% endif %}"></span> {{ mio_status }}</td>
+        </tr>
+        <tr>
+            <td>PoA Chain Length</td>
+            <td>{{ chain_length }} blocks</td>
+        </tr>
+    </table>
+
+    <p><a href="/dashboard">← Back to Dashboard</a></p>
+</section>
+{% endblock %}

@@ -7,7 +7,7 @@ Runs on :8080, behind Caddy reverse proxy.
 import json
 from pathlib import Path
 from fastapi import FastAPI, Request, Form, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader
 
@@ -348,6 +348,86 @@ async def download_policy(req_id: str):
     if not policy_file.exists():
         raise HTTPException(status_code=404, detail="Policy file not found")
     return FileResponse(str(policy_file), filename=f"{req_id}_policy.json", media_type="application/json")
+
+
+# ── Live Agent Chat ─────────────────────────────────────────────
+
+from app.agent_service import get_agent_service, MODELS, TIER_MODELS
+
+
+@app.post("/api/chat/{req_id}")
+async def chat_with_agent(req_id: str, request: Request):
+    """Send a message to a live agent and get a response."""
+    body = await request.json()
+    user_message = body.get("message", "")
+    model_key = body.get("model", "owl-alpha")
+    history = body.get("history", [])
+
+    if not user_message:
+        return JSONResponse({"error": "Message required"}, status_code=400)
+
+    # Get the agent's system prompt
+    db = await get_db()
+    agent_row = await db.execute("SELECT * FROM agents WHERE agent_request_id = ?", (req_id,))
+    agent = await agent_row.fetchone()
+    await db.close()
+
+    if not agent:
+        return JSONResponse({"error": "Agent not found"}, status_code=404)
+
+    agent_prompt = agent["system_prompt"]
+
+    # Check if model is allowed for tier (default free)
+    tier = "free"
+    allowed_models = TIER_MODELS.get(tier, TIER_MODELS["free"])
+    if model_key not in allowed_models:
+        model_key = allowed_models[0]
+
+    # Call OpenRouter
+    service = get_agent_service()
+    if not service.is_configured:
+        return JSONResponse({"error": "OpenRouter not configured"}, status_code=500)
+
+    try:
+        result = await service.chat(
+            agent_prompt=agent_prompt,
+            user_message=user_message,
+            model_key=model_key,
+            conversation_history=history,
+        )
+        return JSONResponse({
+            "response": result["response"],
+            "model": result["model"],
+        })
+    except Exception as e:
+        logger.error("Chat error: %s", e)
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+
+@app.get("/api/models")
+async def get_models():
+    """Get available models."""
+    service = get_agent_service()
+    models = service.get_available_models("free")
+    return JSONResponse({"models": models})
+
+
+@app.get("/chat/{req_id}")
+async def chat_page(request: Request, req_id: str):
+    """Live agent chat page."""
+    db = await get_db()
+    agent_row = await db.execute("SELECT * FROM agents WHERE agent_request_id = ?", (req_id,))
+    agent = await agent_row.fetchone()
+    await db.close()
+
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+
+    return respond("chat.html", {
+        "request": request,
+        "agent": agent,
+        "req_id": req_id,
+    })
 
 
 # ── CLI entry point ────────────────────────────────────────────

@@ -79,7 +79,12 @@
     <div class="next-steps">
         <h2>Your Agent is Ready</h2>
 
-        {% if agent_file %}
+        <div class="download-section">
+            <h3>🤖 Chat with Your Agent</h3>
+            <a href="/chat/{{ req_id }}" class="btn btn-primary">Open Live Chat</a>
+            <p class="download-note">Talk to your agent in real-time using OpenRouter's free Owl Alpha model.</p>
+        </div>
+
         <div class="download-section">
             <h3>📥 Download Your Agent</h3>
             <div class="download-buttons">

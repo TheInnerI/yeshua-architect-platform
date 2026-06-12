@@ -13,7 +13,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from app.db import init_db, get_db, make_id
 from app.models import AgentIntake
-from app.scoring import evaluate_five_tests
+from app.scoring import evaluate_six_tests
 from app.proxy import (
     score_via_poa, get_poa_receipt, get_poa_chain_length,
     check_poa_health, check_mio_health, observe_via_mio,

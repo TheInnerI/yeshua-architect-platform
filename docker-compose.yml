@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  yeshua-architect:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yeshua-architect-platform
+    expose:
+      - "8080"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+    environment:
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8080
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

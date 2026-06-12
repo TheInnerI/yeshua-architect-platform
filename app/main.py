@@ -66,6 +66,7 @@ def _build_concept_text(intake: AgentIntake) -> str:
         f"Boundaries: {intake.boundaries or 'standard'}",
         f"Desired fruit: {intake.desired_fruit or 'clarity, wisdom, service'}",
         f"Monetization: {intake.monetization_model or 'none specified'}",
+        f"Cognitive Solvency: {intake.solvency_model or 'none specified'}",
         f"Jesus anchor: {intake.jesus_anchor or 'general'}",
         f"Tools: {intake.tools_requested or 'standard'}",
         f"Tone: {intake.tone}",
@@ -150,7 +151,7 @@ async def build_submit(
     )
 
     concept_text = _build_concept_text(intake)
-    five_result = evaluate_five_tests(concept_text)
+    five_result = evaluate_six_tests(concept_text)
     poa_result = await score_via_poa(concept_text)
 
     req_id = make_id("req_")
@@ -171,12 +172,12 @@ async def build_submit(
     await db.execute(
         """INSERT INTO agent_audits
            (id, agent_request_id, truth_score, neighbor_score, fruit_score,
-            mammon_score, service_score, composite_five, grade, verdict,
+            mammon_score, service_score, solvency_score, composite_five, grade, verdict,
             correction_notes, poa_receipt_id)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (audit_id, req_id, five_result.truth_score, five_result.neighbor_score,
          five_result.fruit_score, five_result.mammon_score, five_result.service_score,
-         five_result.composite, poa_result.grade, five_result.verdict,
+         five_result.solvency_score, five_result.composite, poa_result.grade, five_result.verdict,
          correction_json, poa_result.receipt_id),
     )
 
@@ -190,6 +191,7 @@ async def build_submit(
         "fruit_score": five_result.fruit_score,
         "mammon_score": five_result.mammon_score,
         "service_score": five_result.service_score,
+        "solvency_score": five_result.solvency_score,
         "composite": five_result.composite,
         "verdict": five_result.verdict,
         "correction_notes": five_result.correction_notes or {},

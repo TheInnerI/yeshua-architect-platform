@@ -34,6 +34,7 @@
         <div class="score-card"><h4>Fruit</h4><div class="score-value">{{ audit['fruit_score'] }}/5</div></div>
         <div class="score-card"><h4>Mammon</h4><div class="score-value">{{ audit['mammon_score'] }}/5</div></div>
         <div class="score-card"><h4>Service</h4><div class="score-value">{{ audit['service_score'] }}/5</div></div>
+        <div class="score-card"><h4>Solvency</h4><div class="score-value">{{ audit.get('solvency_score', 0) }}/5</div></div>
     </div>
 
     {% if correction_notes %}

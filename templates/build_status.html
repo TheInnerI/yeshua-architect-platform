@@ -54,6 +54,12 @@
             <div class="score-bar"><div class="score-fill" style="width: {{ (five_result.service_score / 5 * 100) }}%"></div></div>
             <p class="scripture">"The greatest among you shall be your servant." — Matthew 20:26</p>
         </div>
+        <div class="score-card">
+            <h3>Cognitive Solvency</h3>
+            <div class="score-value">{{ five_result.solvency_score }}/5</div>
+            <div class="score-bar"><div class="score-fill" style="width: {{ (five_result.solvency_score / 5 * 100) }}%"></div></div>
+            <p class="scripture">"Count the cost before you build." — Luke 14:28</p>
+        </div>
     </div>
 
     {% if five_result.correction_notes %}

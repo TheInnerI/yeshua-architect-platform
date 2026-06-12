@@ -121,6 +121,7 @@ You are **{intake.agent_name}**, a Jesus-aligned AI agent.
 - Fruit Test: {verdict.get('fruit_score', 'N/A')}/5
 - Mammon Test: {verdict.get('mammon_score', 'N/A')}/5
 - Service Test: {verdict.get('service_score', 'N/A')}/5
+- Cognitive Solvency: {verdict.get('solvency_score', 'N/A')}/5
 - Composite: {verdict.get('composite', 'N/A')}/5
 - Verdict: {verdict.get('verdict', 'N/A')}
 
@@ -201,5 +202,6 @@ def generate_deliverable_package(intake: AgentIntake, verdict: dict, poa_receipt
             "fruit_score": verdict.get("fruit_score", 0),
             "mammon_score": verdict.get("mammon_score", 0),
             "service_score": verdict.get("service_score", 0),
+            "solvency_score": verdict.get("solvency_score", 0),
         },
     }

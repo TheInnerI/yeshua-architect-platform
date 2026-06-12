@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 class AgentIntake(BaseModel):
-    """12-question intake form."""
+    """12-question intake form (now 13 with Cognitive Solvency)."""
     agent_name: str = Field(..., min_length=1, max_length=200, description="What do you want to call this agent?")
     purpose: str = Field(..., min_length=10, description="What do you want this agent to help with?")
     audience: Optional[str] = Field(None, description="Who will this agent serve?")
@@ -14,6 +14,7 @@ class AgentIntake(BaseModel):
     boundaries: Optional[str] = Field(None, description="What should it never do?")
     desired_fruit: Optional[str] = Field(None, description="What kind of fruit should it produce?")
     monetization_model: Optional[str] = Field(None, description="How will this agent make money, save time, or create value?")
+    solvency_model: Optional[str] = Field(None, description="Can this agent fund its own cognition? What is its revenue loop?")
     jesus_anchor: Optional[str] = Field(None, description="What Jesus teaching should anchor this agent?")
     tools_requested: Optional[str] = Field(None, description="What tools should it use?")
     tone: Optional[str] = Field("warm and direct", description="What tone should it speak with?")
@@ -39,14 +40,15 @@ class ScoreResponse(BaseModel):
 
 
 class FiveTestVerdict(BaseModel):
-    """Five Test evaluation result."""
+    """Six Test evaluation result (kept name for backward compatibility)."""
     truth_score: float
     neighbor_score: float
     fruit_score: float
     mammon_score: float
     service_score: float
+    solvency_score: float = 0.0
     composite: float
-    verdict: str  # approved / needs_correction / rejected
+    verdict: str  # approved / needs_correction / rejected / good_fruit
     correction_notes: dict = {}  # test_name -> note
 
 

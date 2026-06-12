@@ -1,11 +1,12 @@
-"""Five Test scoring engine for Yeshua Architect Platform.
+"""Six Test scoring engine for Yeshua Architect Platform.
 
-Evaluates agent concepts through the Five Tests:
+Evaluates agent concepts through the Six Tests:
 1. Truth — Does it align with truth? No deception, exaggeration, false authority.
 2. Neighbor — Does it serve the neighbor? No exploitation, pressure, ignoring the vulnerable.
 3. Fruit — Does it produce good fruit? Clarity, wisdom, service — not greed, addiction, domination.
 4. Mammon — Does money serve the mission? No fake scarcity, predatory upsells, spiritual pressure.
 5. Service — Does it actually serve? Reduces burden, increases clarity, restores agency.
+6. Cognitive Solvency — Can the agent fund its own cognition? Or is it subsidized intelligence?
 
 Each test scores 0-5. Any 0 = rejected. Any 1 = needs correction. All ≥3 = approved. All ≥4 = good fruit.
 """
@@ -89,6 +90,28 @@ FRUIT_POSITIVE = ["clarity", "wisdom", "peace", "healing", "growth", "freedom", 
 MAMMON_POSITIVE = ["fair", "honest pricing", "free", "donate", "accessible", "non-profit", "stewardship"]
 SERVICE_POSITIVE = ["serve", "reduce burden", "restore", "empower", "teach", "guide", "help", "tool", "servant"]
 
+# Cognitive Solvency flags — signs an agent is subsidized, wasteful, or parasitic
+SOLVENCY_FLAGS = {
+    "no revenue": ("Agent has no revenue loop. It is fully subsidized.", 2),
+    "no monetization": ("No clear monetization path. Agent burns tokens without return.", 2),
+    "token waste": ("Agent burns tokens on noise, not value.", 1),
+    "no break-even": ("No break-even analysis. Agent economics are unclear.", 2),
+    "fully dependent": ("Agent is fully dependent on external funding with no path to solvency.", 1),
+    "no value loop": ("Agent creates no measurable value loop.", 2),
+    "parasitic": ("Agent extracts value without returning it. Parasitic pattern.", 0),
+    "performative": ("Agent performs work without producing real outcomes.", 1),
+    "no cost awareness": ("Agent has no awareness of its own compute cost.", 1),
+    "infinite loop": ("Agent may run indefinitely without producing value.", 1),
+}
+
+# Positive indicators for Cognitive Solvency
+SOLVENCY_POSITIVE = [
+    "revenue", "monetize", "profit", "savings", "roi", "break-even",
+    "self-funding", "sustainable", "efficient", "cost-effective",
+    "value creation", "income", "earnings", "return on investment",
+    "stewardship", "reinvest", "surplus", "mission-aligned"
+]
+
 
 def _score_test(text: str, flags: dict, positives: list, test_name: str) -> tuple[float, list[str]]:
     """Score a single test. Returns (score, notes)."""
@@ -119,8 +142,8 @@ def _score_test(text: str, flags: dict, positives: list, test_name: str) -> tupl
     return score, notes
 
 
-def evaluate_five_tests(agent_concept: str) -> FiveTestVerdict:
-    """Run all Five Tests on an agent concept. Returns scores + verdict."""
+def evaluate_six_tests(agent_concept: str) -> FiveTestVerdict:
+    """Run all Six Tests on an agent concept. Returns scores + verdict."""
 
     # Combine all text for analysis
     full_text = agent_concept
@@ -131,11 +154,12 @@ def evaluate_five_tests(agent_concept: str) -> FiveTestVerdict:
     fruit_score, fruit_notes = _score_test(full_text, FRUIT_FLAGS, FRUIT_POSITIVE, "Fruit")
     mammon_score, mammon_notes = _score_test(full_text, MAMMON_FLAGS, MAMMON_POSITIVE, "Mammon")
     service_score, service_notes = _score_test(full_text, SERVICE_FLAGS, SERVICE_POSITIVE, "Service")
+    solvency_score, solvency_notes = _score_test(full_text, SOLVENCY_FLAGS, SOLVENCY_POSITIVE, "Cognitive Solvency")
 
-    composite = (truth_score + neighbor_score + fruit_score + mammon_score + service_score) / 5.0
+    composite = (truth_score + neighbor_score + fruit_score + mammon_score + service_score + solvency_score) / 6.0
 
     # Verdict logic
-    scores = [truth_score, neighbor_score, fruit_score, mammon_score, service_score]
+    scores = [truth_score, neighbor_score, fruit_score, mammon_score, service_score, solvency_score]
     if any(s == 0 for s in scores):
         verdict = "rejected"
     elif any(s <= 1 for s in scores):
@@ -155,6 +179,7 @@ def evaluate_five_tests(agent_concept: str) -> FiveTestVerdict:
         "Fruit": fruit_notes,
         "Mammon": mammon_notes,
         "Service": service_notes,
+        "Cognitive Solvency": solvency_notes,
     }
     for test_name, notes in all_notes.items():
         if notes:
@@ -166,6 +191,7 @@ def evaluate_five_tests(agent_concept: str) -> FiveTestVerdict:
         fruit_score=round(fruit_score, 1),
         mammon_score=round(mammon_score, 1),
         service_score=round(service_score, 1),
+        solvency_score=round(solvency_score, 1),
         composite=round(composite, 2),
         verdict=verdict,
         correction_notes=correction_notes,

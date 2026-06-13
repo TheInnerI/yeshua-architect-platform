@@ -242,6 +242,80 @@ async def build_submit(
     })
 
 
+# ── Download Agent Package ──────────────────────────────────────
+
+from app.package_generator import create_agent_zip_package
+from fastapi.responses import Response
+
+
+@app.get("/download/package/{req_id}")
+async def download_package(request: Request, req_id: str, tier: str = "starter"):
+    """Download the agent's .zip package."""
+    db = await get_db()
+    agent_row = await db.execute("SELECT * FROM agents WHERE agent_request_id = ?", (req_id,))
+    agent = await agent_row.fetchone()
+    if not agent:
+        await db.close()
+        raise HTTPException(status_code=404, detail="Agent not found")
+
+    # Get audit results
+    audit_row = await db.execute("SELECT * FROM agent_audits WHERE agent_request_id = ?", (req_id,))
+    audit = await audit_row.fetchone()
+    await db.close()
+
+    if not audit:
+        raise HTTPException(status_code=404, detail="Audit not found")
+
+    # Reconstruct verdict dict
+    verdict = {
+        "truth_score": audit["truth_score"],
+        "neighbor_score": audit["neighbor_score"],
+        "fruit_score": audit["fruit_score"],
+        "mammon_score": audit["mammon_score"],
+        "service_score": audit["service_score"],
+        "solvency_score": audit.get("solvency_score", 0),
+        "composite": audit["composite_five"],
+        "verdict": audit["verdict"],
+        "correction_notes": {},
+    }
+
+    if audit["correction_notes"]:
+        try:
+            verdict["correction_notes"] = json.loads(audit["correction_notes"])
+        except Exception:
+            pass
+
+    # Reconstruct intake
+    intake = AgentIntake(
+        agent_name=agent["name"],
+        purpose=agent_row["purpose"] if hasattr(agent_row, "purpose") else "General assistant",
+        audience=None,
+        problem_solved=None,
+        boundaries=None,
+        desired_fruit=None,
+        monetization_model=None,
+        jesus_anchor=None,
+        tools_requested=None,
+        tone="warm and direct",
+    )
+
+    # Generate zip
+    zip_bytes = create_agent_zip_package(
+        intake=intake,
+        verdict=verdict,
+        poa_receipt_id=audit.get("poa_receipt_id", ""),
+        tier=tier,
+    )
+
+    # Return as download
+    safe_name = agent["name"].lower().replace(" ", "-")
+    return Response(
+        content=zip_bytes,
+        media_type="application/zip",
+        headers={"Content-Disposition": f"attachment; filename={safe_name}-agent.zip"},
+    )
+
+
 # ── Agents list ────────────────────────────────────────────────
 
 

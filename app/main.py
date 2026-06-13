@@ -92,9 +92,14 @@ async def five_tests(request: Request):
     return respond("five-tests.html", {"request": request})
 
 
-@app.get("/examples", response_class=HTMLResponse)
-async def examples(request: Request):
-    return respond("examples.html", {"request": request})
+@app.get("/six-tests", response_class=HTMLResponse)
+async def six_tests(request: Request):
+    return respond("six-tests.html", {"request": request})
+
+
+@app.get("/agents", response_class=HTMLResponse)
+async def agents(request: Request):
+    return respond("agents.html", {"request": request})
 
 
 @app.get("/pricing", response_class=HTMLResponse)

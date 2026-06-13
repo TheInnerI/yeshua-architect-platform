@@ -1,33 +1,108 @@
 {% extends "layout.html" %}
-{% block title %}Delivered Agents — Yeshua Architect{% endblock %}
+{% block title %}Pre-Built Agent Packages — Yeshua Architect{% endblock %}
 {% block content %}
 <section class="section">
-    <h1>Delivered Agents</h1>
-    <p>Agents that have been built and delivered through the platform.</p>
+    <h1>Pre-Built Agent Packages</h1>
+    <p>Don't want to start from scratch? Download a complete agent package and deploy it in minutes. Each package includes: agent prompt, policy, examples, audit report, and PoA receipt.</p>
 
-    {% if agents %}
-    <table class="agents-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Purpose</th>
-                <th>Verdict</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for agent in agents %}
-            <tr>
-                <td><a href="/agents/{{ agent['id'] }}">{{ agent['agent_name'] }}</a></td>
-                <td>{{ agent['purpose'][:80] }}{% if agent['purpose']|length > 80 %}...{% endif %}</td>
-                <td>{{ agent['status'] }}</td>
-                <td>{{ agent['created_at'][:10] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p class="empty">No agents delivered yet. <a href="/build">Be the first</a>.</p>
-    {% endif %}
+    <h2>Quick Start ($11–$20)</h2>
+    <div class="agents-grid">
+        <div class="agent-card">
+            <h3>📖 Pastor Helper</h3>
+            <p>Sermon preparation, pastoral care, church administration. Biblical guidance and counseling frameworks.</p>
+            <ul class="features">
+                <li>✅ Six Test audit report</li>
+                <li>✅ Cognitive Solvency analysis</li>
+                <li>✅ Agent prompt + policy</li>
+                <li>✅ 3 example conversations</li>
+            </ul>
+            <span class="price">$20 — Starter Build</span>
+            <a href="https://innerinetwork.gumroad.com/l/A7xaqWzdZpwwHu2esJ2-Bg" class="btn btn-primary">Buy & Download</a>
+        </div>
+
+        <div class="agent-card">
+            <h3>💼 Business Coach</h3>
+            <p>Strategy, marketing, operations for small business owners. Honest guidance without manipulation.</p>
+            <ul class="features">
+                <li>✅ Six Test audit report</li>
+                <li>✅ Cognitive Solvency deep analysis</li>
+                <li>✅ Action plan (fix these 3 things first)</li>
+                <li>✅ Agent prompt + policy + examples</li>
+            </ul>
+            <span class="price">$49 — Full Audit</span>
+            <a href="https://innerinetwork.gumroad.com/l/bZOxWHo0iyg9tGlIzjlFFg" class="btn btn-primary">Buy & Download</a>
+        </div>
+    </div>
+
+    <h2>Specialized Audits ($99)</h2>
+    <div class="agents-grid">
+        <div class="agent-card">
+            <h3>🤖 AI Agent Auditor</h3>
+            <p>Audit other AI agents for ethical alignment and economic viability. MIO-06 Cognitive Solvency specialist.</p>
+            <ul class="features">
+                <li>✅ Cognitive Solvency 10-question analysis</li>
+                <li>✅ Cost breakdown (compute, tools, memory)</li>
+                <li>✅ Revenue loop recommendations</li>
+                <li>✅ Break-even calculation</li>
+                <li>✅ Model routing optimization</li>
+            </ul>
+            <span class="price">$99 — Cognitive Solvency Audit</span>
+            <a href="https://innerinetwork.gumroad.com/l/-ZK70byAEvjh-Ert0Zsw0g" class="btn btn-primary">Buy & Download</a>
+        </div>
+    </div>
+
+    <h2>Full Deployments ($149–$299)</h2>
+    <div class="agents-grid">
+        <div class="agent-card">
+            <h3>🎧 Customer Support Agent</h3>
+            <p>Handle inquiries, troubleshoot, escalate. Includes landing page + lead form + email sequence.</p>
+            <ul class="features">
+                <li>✅ Everything in Starter</li>
+                <li>✅ Landing page (HTML/CSS)</li>
+                <li>✅ Lead capture form</li>
+                <li>✅ 3-email onboarding sequence</li>
+                <li>✅ 90-day monitoring config</li>
+            </ul>
+            <span class="price">$149 — Pro Build</span>
+            <a href="https://innerinetwork.gumroad.com/l/vw7OrLskPa9IcCxflrLQrg" class="btn btn-primary">Buy & Download</a>
+        </div>
+
+        <div class="agent-card">
+            <h3>👑 Kingdom Business Builder</h3>
+            <p>Complete system for Christian entrepreneurs. Web app spec + DB schema + admin dashboard.</p>
+            <ul class="features">
+                <li>✅ Everything in Pro Build</li>
+                <li>✅ Web app architecture spec</li>
+                <li>✅ Database schema (SQL)</li>
+                <li>✅ Admin dashboard spec</li>
+                <li>✅ Multi-agent orchestration</li>
+                <li>✅ API access</li>
+            </ul>
+            <span class="price">$299 — Full System</span>
+            <a href="https://innerinetwork.gumroad.com/l/wtlb0_tM80qiTN-_1L7fbQ" class="btn btn-primary">Buy & Download</a>
+        </div>
+    </div>
+
+    <h2>Ongoing Monitoring</h2>
+    <div class="agents-grid">
+        <div class="agent-card">
+            <h3>📊 Basic Monitoring</h3>
+            <p>Monthly coherence score + residual report. PDF delivery.</p>
+            <span class="price">$5/month</span>
+            <a href="https://innerinetwork.gumroad.com/l/a_K9GcYkC4z-DzBYNactRg" class="btn btn-primary">Subscribe</a>
+        </div>
+        <div class="agent-card">
+            <h3>📊 Full Monitoring</h3>
+            <p>Weekly reports + drift alerts + policy violation warnings + quarterly review.</p>
+            <span class="price">$15/month</span>
+            <a href="https://innerinetwork.gumroad.com/l/wy7RxmHMygiJUQ3OdIh7Pg" class="btn btn-primary">Subscribe</a>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; padding: 30px; background: var(--bg-card); border-radius: 12px;">
+        <h2>Want a Custom Agent?</h2>
+        <p>Fill out the 13-question intake form. Get an instant Six Test audit. Download your custom agent package.</p>
+        <a href="/build" class="btn btn-large btn-primary">Start Free Audit</a>
+    </div>
 </section>
 {% endblock %}
